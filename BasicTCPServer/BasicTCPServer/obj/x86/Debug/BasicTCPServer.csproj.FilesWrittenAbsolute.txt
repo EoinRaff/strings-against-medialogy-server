@@ -1,0 +1,5 @@
+/Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe.mdb
+/Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
+/Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe
+/Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe.mdb
