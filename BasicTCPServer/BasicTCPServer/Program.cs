@@ -27,13 +27,6 @@ public class MultithreadTCPServer
 		string[] answers = new String[10];
 		string[] questions = new String[4];
 
-
-		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-
-		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/Awnsers.txt");
-		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/questions.txt");
-
-
 		StreamReader awnFile = new StreamReader("answers.txt");
 		StreamReader questFile = new StreamReader("questions.txt");
 
@@ -70,9 +63,6 @@ public class MultithreadTCPServer
 		questionAsked = askQuestion(questionsDeck);
 
 
-
-
-
 	} // Main
 
 	static void Listeners()
@@ -106,7 +96,7 @@ public class MultithreadTCPServer
 					// Writes the questions found in main to clients
 					streamWriter.WriteLine(questionAsked);
 
-					//Here the playerHand is set equal to the list returned from the method
+					// Here the playerHand is set equal to the list returned from the method
 					playerHand = dealDeack(answerDeck);
 
 					// Creates one string to send to client instead of list
@@ -120,7 +110,6 @@ public class MultithreadTCPServer
 
 
 				// Information back and forward between client and server goes here
-
 			
 
 				if (inputLine == "exit")
