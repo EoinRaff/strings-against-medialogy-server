@@ -13,26 +13,23 @@ public class MultithreadTCPServer
 	public static string serverIP = "127.0.0.1";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
-<<<<<<< HEAD
-
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
-=======
+
 	static int numberOfPlayers = 0;
 	static bool enoughPlayers = false;
->>>>>>> 56e3e80aaad94755cdd87403636b5954c739d71e
+	static string questionAsked;
 
 	public static void Main()
 	{
-
 		string[] answers = new String[10];
 		string[] questions = new String[4];
 
 
 		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/SuneKlem/Projects/ReadFromTextFILE/ReadFromTextFILE/data/Awnsers.txt");
-		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/SuneKlem/Projects/ReadFromTextFILE/ReadFromTextFILE/data/questions.txt");
+		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/Awnsers.txt");
+		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/questions.txt");
 
 
 		for (int i = 0; i < questions.Length; i++)
@@ -55,32 +52,20 @@ public class MultithreadTCPServer
 		awnFile.Close();
 		questFile.Close();
 
-
-
 		tcpListener.Start();
-		Console.WriteLine("How many clients are going to connect to this server?:");
-		int numberOfClientsYouNeedToConnect = int.Parse(Console.ReadLine());
+		Console.WriteLine("Server started");
 		Console.WriteLine ("Waiting for clients..");
-		for (int i = 0; i < numberOfClientsYouNeedToConnect; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			Thread newThread = new Thread(new ThreadStart(Listeners)); // Create new thread for each client
 			newThread.Start();
 		}
 
-
-		// Here the main calls the ask question method
-		askQuestion(questionsDeck);
-
-		//Here the playerHand is set equal to the list returned from the method
-		playerHand = dealDeack(answerDeck);
-
-		foreach (string word in playerHand)
-		{
-			Console.WriteLine(word);
-		}
+		questionAsked = askQuestion(questionsDeck);
 
 
-	
+
+
 
 	} // Main
 
@@ -100,15 +85,37 @@ public class MultithreadTCPServer
 			{
 				string inputLine = streamReader.ReadLine();
 
+		//------------------------------------------ Waits for enough players to join
+//				while (enoughPlayers == false) {
+//					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
+//
+//					if (numberOfPlayers == 3) {
+//						enoughPlayers = true;
+//					}
+//				}
+
+				// If a certain input is recieved from client a hand is dealt 
+				if (inputLine == "p") 
+				{
+					// Writes the questions found in main to clients
+					streamWriter.WriteLine(questionAsked);
+
+					//Here the playerHand is set equal to the list returned from the method
+					playerHand = dealDeack(answerDeck);
+
+					// Creates one string to send to client instead of list
+					string stringToSend = string.Join (String.Empty, playerHand.ToArray ());
+
+					streamWriter.WriteLine(stringToSend);
+
+				}
+
+				Console.WriteLine("Message recieved by client:" + inputLine);
+
+
 				// Information back and forward between client and server goes here
 
-				while (enoughPlayers == false){
-					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
-				
-					if (numberOfPlayers == 3) {
-						enoughPlayers = true;
-					}
-				}
+			
 
 				if (inputLine == "exit")
 					break;
@@ -125,6 +132,7 @@ public class MultithreadTCPServer
 
 	} // Listener
 
+
 	//This method deals the card to the player and returns the via a string. 
 	static List <string> dealDeack(List <string> _awnserDeck)
 	{
@@ -133,7 +141,7 @@ public class MultithreadTCPServer
 		Random random = new Random();
 		int ranValue;
 
-		for (int i = 0; i <= 6; i++)
+		for (int i = 0; i <= 4; i++)
 		{
 			//this is what "shuffles the card"
 			ranValue = random.Next(0, _awnserDeck.Count);
@@ -146,24 +154,22 @@ public class MultithreadTCPServer
 		}
 
 		return playerDeck;
-	}
+	} // dealDeack
+
 
 	//In this method a random question is found, and send to the console
-	static void askQuestion(List <string> _questions)
+	static string askQuestion(List <string> _questions)
 	{
 		Random random = new Random();
 
 		//this is what "shuffles the card"
 		int ranVaulue = random.Next(0, _questions.Count);
 
-		//This prints the question 
-		System.Console.WriteLine(_questions[ranVaulue]);
-
 		//Here the question is then removed from the main question holder
 		questionsDeck.RemoveAt(ranVaulue);
-	}
 
-
-
-
+		// The chosen question is returned
+		return _questions [ranVaulue];
+	} // askQuestion
+		
 } // Class
