@@ -13,15 +13,13 @@ public class MultithreadTCPServer
 	public static string serverIP = "127.0.0.1";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
-<<<<<<< HEAD
 
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
-=======
 	static int numberOfPlayers = 0;
 	static bool enoughPlayers = false;
->>>>>>> 56e3e80aaad94755cdd87403636b5954c739d71e
+
 
 	public static void Main()
 	{
