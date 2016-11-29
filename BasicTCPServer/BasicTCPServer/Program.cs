@@ -13,10 +13,15 @@ public class MultithreadTCPServer
 	public static string serverIP = "127.0.0.1";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
+<<<<<<< HEAD
 
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
+=======
+	static int numberOfPlayers = 0;
+	static bool enoughPlayers = false;
+>>>>>>> 56e3e80aaad94755cdd87403636b5954c739d71e
 
 	public static void Main()
 	{
@@ -55,6 +60,7 @@ public class MultithreadTCPServer
 		tcpListener.Start();
 		Console.WriteLine("How many clients are going to connect to this server?:");
 		int numberOfClientsYouNeedToConnect = int.Parse(Console.ReadLine());
+		Console.WriteLine ("Waiting for clients..");
 		for (int i = 0; i < numberOfClientsYouNeedToConnect; i++)
 		{
 			Thread newThread = new Thread(new ThreadStart(Listeners)); // Create new thread for each client
@@ -85,6 +91,7 @@ public class MultithreadTCPServer
 		if (ClientSocket.Connected)
 		{
 			Console.WriteLine("Client:" + ClientSocket.RemoteEndPoint + " now connected to server.");
+			numberOfPlayers++;
 			NetworkStream networkStream = new NetworkStream(ClientSocket);
 			StreamWriter streamWriter = new StreamWriter(networkStream, Encoding.ASCII) { AutoFlush = true };
 			StreamReader streamReader = new StreamReader(networkStream, Encoding.ASCII);
@@ -93,9 +100,15 @@ public class MultithreadTCPServer
 			{
 				string inputLine = streamReader.ReadLine();
 
-
 				// Information back and forward between client and server goes here
 
+				while (enoughPlayers == false){
+					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
+				
+					if (numberOfPlayers == 3) {
+						enoughPlayers = true;
+					}
+				}
 
 				if (inputLine == "exit")
 					break;
