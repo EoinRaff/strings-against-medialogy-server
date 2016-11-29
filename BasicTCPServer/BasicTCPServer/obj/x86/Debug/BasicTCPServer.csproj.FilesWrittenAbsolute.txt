@@ -3,3 +3,8 @@
 /Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
 /Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe
 /Users/amaliesolander/Projects/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe.mdb
+/Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe.mdb
+/Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
+/Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe
+/Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe.mdb
