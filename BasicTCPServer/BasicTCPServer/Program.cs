@@ -16,9 +16,11 @@ public class MultithreadTCPServer
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
+	static public List<string> questionsForJudge = new List<string> ();
 
 	static int numberOfPlayers = 0;
 	static bool enoughPlayers = false;
+	static bool allAnswersCollected = false;
 	static string questionAsked;
 
 
@@ -26,13 +28,6 @@ public class MultithreadTCPServer
 	{
 		string[] answers = new String[10];
 		string[] questions = new String[4];
-
-
-		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-
-		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/Awnsers.txt");
-		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/questions.txt");
-
 
 		StreamReader awnFile = new StreamReader("answers.txt");
 		StreamReader questFile = new StreamReader("questions.txt");
@@ -69,9 +64,10 @@ public class MultithreadTCPServer
 
 		questionAsked = askQuestion(questionsDeck);
 
-
-
-
+		if (questionsForJudge.Count >= 2){
+			string stringForJudge = string.Join (String.Empty, questionsForJudge.ToArray ());
+			allAnswersCollected = true;
+		}
 
 	} // Main
 
@@ -114,6 +110,14 @@ public class MultithreadTCPServer
 
 					streamWriter.WriteLine(stringToSend);
 
+				}
+				if (inputLine == "1" || inputLine == "2" || inputLine == "3" || inputLine == "4" || inputLine == "5") {
+					Console.WriteLine (playerHand [int.Parse (inputLine) - 1]);
+					questionsForJudge.Add (playerHand [int.Parse (inputLine) - 1]);
+				}
+
+				if (allAnswersCollected == true) { // Add so it only sends to judge
+					streamWriter.WriteLine (questionsForJudge);
 				}
 
 				Console.WriteLine("Message recieved by client:" + inputLine);

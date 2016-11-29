@@ -16,3 +16,5 @@
 /Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe.mdb
 /Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
 >>>>>>> 56e3e80aaad94755cdd87403636b5954c739d71e
+/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.pdb
+/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.pdb

@@ -1,13 +1,13 @@
-﻿<Properties StartupConfiguration="{6EBC1C85-05F8-42B8-9BE6-9BEA92F05095}|Default">
+﻿<Properties StartupConfiguration="{6EBC1C85-05F8-42B8-9BE6-9BEA92F05095}|Default" StartupItem="BasicTCPServer.csproj">
   <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="1" Column="1" />
+      <File FileName="Program.cs" Line="54" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.ItemProperties.BasicTCPServer PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.BasicTCPServer PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>
