@@ -1,0 +1,5 @@
+C:\Users\eoinr_000\Documents\GitHub\strings-against-medialogy-server\BasicTCPServer\BasicTCPServer\obj\x86\Debug\BasicTCPServer.exe
+C:\Users\eoinr_000\Documents\GitHub\strings-against-medialogy-server\BasicTCPServer\BasicTCPServer\bin\Debug\BasicTCPServer.exe
+C:\Users\eoinr_000\Documents\GitHub\strings-against-medialogy-server\BasicTCPServer\BasicTCPServer\bin\Debug\BasicTCPServer.pdb
+C:\Users\eoinr_000\Documents\GitHub\strings-against-medialogy-server\BasicTCPServer\BasicTCPServer\obj\x86\Debug\BasicTCPServer.csprojResolveAssemblyReference.cache
+C:\Users\eoinr_000\Documents\GitHub\strings-against-medialogy-server\BasicTCPServer\BasicTCPServer\obj\x86\Debug\BasicTCPServer.pdb
