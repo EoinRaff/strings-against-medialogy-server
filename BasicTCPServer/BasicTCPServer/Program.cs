@@ -29,8 +29,8 @@ public class MultithreadTCPServer
 
 
 		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/SuneKlem/Projects/ReadFromTextFILE/ReadFromTextFILE/data/Awnsers.txt");
-		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/SuneKlem/Projects/ReadFromTextFILE/ReadFromTextFILE/data/questions.txt");
+		StreamReader awnFile = new StreamReader("answers.txt");
+		StreamReader questFile = new StreamReader("questions.txt");
 
 
 		for (int i = 0; i < questions.Length; i++)
