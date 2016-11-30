@@ -5,7 +5,7 @@ using System.Threading;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-
+using System.Linq;
 
 public class MultithreadTCPServer
 {
@@ -16,23 +16,26 @@ public class MultithreadTCPServer
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
+	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
 
 	static int numberOfPlayers = 0;
 	static bool enoughPlayers = false;
 	static string questionAsked;
 
 
+
+	//vælg hvem der er judge 
+	//send til hver player om de judge eller spiller
+	//
+
 	public static void Main()
 	{
+
 		string[] answers = new String[10];
 		string[] questions = new String[4];
 
 
 		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-
-		System.IO.StreamReader awnFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/Awnsers.txt");
-		System.IO.StreamReader questFile = new System.IO.StreamReader(@"/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/data/questions.txt");
-
 
 		StreamReader awnFile = new StreamReader("answers.txt");
 		StreamReader questFile = new StreamReader("questions.txt");
@@ -69,23 +72,30 @@ public class MultithreadTCPServer
 
 		questionAsked = askQuestion(questionsDeck);
 
-
-
-
-
 	} // Main
 
 	static void Listeners()
 	{
 
+
 		Socket ClientSocket = tcpListener.AcceptSocket();
 		if (ClientSocket.Connected)
 		{
-			Console.WriteLine("Client:" + ClientSocket.RemoteEndPoint + " now connected to server.");
 			numberOfPlayers++;
 			NetworkStream networkStream = new NetworkStream(ClientSocket);
 			StreamWriter streamWriter = new StreamWriter(networkStream, Encoding.ASCII) { AutoFlush = true };
 			StreamReader streamReader = new StreamReader(networkStream, Encoding.ASCII);
+
+			//the first input line from the client is their username, this is being stored in a string "username",
+			//the username is then added to the list "usernames" 
+			//this is done for all the clients connected to the server, so the list "usernames" is filled up with the usernames of the clients
+			string inputline = streamReader.ReadLine ();
+			string username = inputline;
+			Console.WriteLine ("Client:" + username + " now connected to server.");
+			usernames.Add (username);
+
+			//the first username in the usernames-list is the judge to begin with
+			string judge = usernames [0];
 
 			while (true)
 			{
@@ -113,8 +123,30 @@ public class MultithreadTCPServer
 					string stringToSend = string.Join (String.Empty, playerHand.ToArray ());
 
 					streamWriter.WriteLine(stringToSend);
-
 				}
+
+				while (enoughPlayers == false){
+
+
+					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
+				
+					if (numberOfPlayers == 2) {
+						enoughPlayers = true;
+
+						//this prints out all the usernames in the usernames-list when the correct number of players have joined
+						//it does however only print when all players have jointed and one have written a message
+						//dont know why??
+							Console.WriteLine ("The following players are now ready to play: ");
+							foreach (string names in usernames) {
+								Console.WriteLine (names);
+							}
+						//writes the name of the judge in the console
+							Console.WriteLine ("the following player is the judge: " + judge);
+
+
+					}
+				}
+					
 
 				Console.WriteLine("Message recieved by client:" + inputLine);
 
