@@ -117,6 +117,7 @@ public class MultithreadTCPServer
 				}
 
 				if (allAnswersCollected == true) { // Add so it only sends to judge
+					Console.WriteLine (questionsForJudge);
 					streamWriter.WriteLine (questionsForJudge);
 				}
 
