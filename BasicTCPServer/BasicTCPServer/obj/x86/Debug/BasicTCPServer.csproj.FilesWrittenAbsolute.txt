@@ -21,3 +21,5 @@
 /Users/amaliesolander/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe.mdb
 /Users/amaliesolander/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe.mdb
 /Users/amaliesolander/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
+/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.pdb
+/Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.pdb
