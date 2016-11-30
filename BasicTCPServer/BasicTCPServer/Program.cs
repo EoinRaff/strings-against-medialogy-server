@@ -10,7 +10,7 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "127.0.0.1";
+	public static string serverIP = "192.168.43.29";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
@@ -64,7 +64,7 @@ public class MultithreadTCPServer
 		tcpListener.Start();
 		Console.WriteLine("Server started");
 		Console.WriteLine ("Waiting for clients..");
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i <= 2; i++)
 		{
 			Thread newThread = new Thread(new ThreadStart(Listeners)); // Create new thread for each client
 			newThread.Start();
@@ -89,29 +89,49 @@ public class MultithreadTCPServer
 			//the first input line from the client is their username, this is being stored in a string "username",
 			//the username is then added to the list "usernames" 
 			//this is done for all the clients connected to the server, so the list "usernames" is filled up with the usernames of the clients
-			string inputline = streamReader.ReadLine ();
+			string inputline = streamReader.ReadLine (); // Recieve username from client
 			string username = inputline;
 			Console.WriteLine ("Client:" + username + " now connected to server.");
 			usernames.Add (username);
 
-			//the first username in the usernames-list is the judge to begin with
-			string judge = usernames [0];
 
+
+			while (!enoughPlayers){
+				
+				streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
+
+				if (numberOfPlayers >= 3) {
+					enoughPlayers = true;
+
+				}
+			}
+
+			streamWriter.WriteLine ("Ready!");
+			foreach (string names in usernames) {
+				streamWriter.WriteLine (names);
+			}
+				
 			while (true)
 			{
+				// Waiting for response from client
 				string inputLine = streamReader.ReadLine();
 
-		//------------------------------------------ Waits for enough players to join
-//				while (enoughPlayers == false) {
-//					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
-//
-//					if (numberOfPlayers == 3) {
-//						enoughPlayers = true;
-//					}
-//				}
+				//the first username in the usernames-list is the judge to begin with
+				string judge = usernames [0];
+
+				//this prints out all the usernames in the usernames-list when the correct number of players have joined
+				//it does however only print when all players have jointed and one have written a message
+				//dont know why??
+				Console.WriteLine ("The following players are now ready to play: ");
+				foreach (string names in usernames) {
+					Console.WriteLine (names);
+				}
+				//writes the name of the judge in the console
+				Console.WriteLine ("the following player is the judge: " + judge);
+
 
 				// If a certain input is recieved from client a hand is dealt 
-				if (inputLine == "p") 
+				if (inputLine == "p" && enoughPlayers == true) 
 				{
 					// Writes the questions found in main to clients
 					streamWriter.WriteLine(questionAsked);
@@ -125,28 +145,7 @@ public class MultithreadTCPServer
 					streamWriter.WriteLine(stringToSend);
 				}
 
-				while (enoughPlayers == false){
 
-
-					streamWriter.WriteLine ("Waiting for " + (int.Parse("3") - numberOfPlayers) + " more player(s) to join..");
-				
-					if (numberOfPlayers == 2) {
-						enoughPlayers = true;
-
-						//this prints out all the usernames in the usernames-list when the correct number of players have joined
-						//it does however only print when all players have jointed and one have written a message
-						//dont know why??
-							Console.WriteLine ("The following players are now ready to play: ");
-							foreach (string names in usernames) {
-								Console.WriteLine (names);
-							}
-						//writes the name of the judge in the console
-							Console.WriteLine ("the following player is the judge: " + judge);
-
-
-					}
-				}
-					
 
 				Console.WriteLine("Message recieved by client:" + inputLine);
 
