@@ -16,7 +16,11 @@ public class MultithreadTCPServer
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
+	static public List<Player> players = new List<Player> ();
 	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
+
+	static public string[] standardPlayerRoles = new string[3]{"Judge","Player","Player"}; 
+	static public string[] distributedPlayerRoles = new string[3]; 
 
 	static int numberOfPlayers = 0;
 	static bool enoughPlayers = false;
@@ -31,7 +35,7 @@ public class MultithreadTCPServer
 	public static void Main()
 	{
 
-		string[] answers = new String[10];
+		string[] answers = new String[30];
 		string[] questions = new String[4];
 
 
@@ -64,20 +68,29 @@ public class MultithreadTCPServer
 		tcpListener.Start();
 		Console.WriteLine("Server started");
 		Console.WriteLine ("Waiting for clients..");
+
 		for (int i = 0; i <= 2; i++)
 		{
 			Thread newThread = new Thread(new ThreadStart(Listeners)); // Create new thread for each client
 			newThread.Start();
 		}
 
+		for (int i = 0; i <= 2; i++) {
+			distributedPlayerRoles [i] = standardPlayerRoles [i];
+	
+//			streamWriter.WriteLine (playerrole);
+		}
+
+
+
 		questionAsked = askQuestion(questionsDeck);
 
 	} // Main
 
+//------------------------------------------ A new thread is made for each client -------------------------------------------\\
 	static void Listeners()
 	{
-
-
+		
 		Socket ClientSocket = tcpListener.AcceptSocket();
 		if (ClientSocket.Connected)
 		{
@@ -89,8 +102,12 @@ public class MultithreadTCPServer
 			//the first input line from the client is their username, this is being stored in a string "username",
 			//the username is then added to the list "usernames" 
 			//this is done for all the clients connected to the server, so the list "usernames" is filled up with the usernames of the clients
+
+
+
 			string inputline = streamReader.ReadLine (); // Recieve username from client
 			string username = inputline;
+			players.Add (new Player (username));
 			Console.WriteLine ("Client:" + username + " now connected to server.");
 			usernames.Add (username);
 
@@ -107,9 +124,7 @@ public class MultithreadTCPServer
 			}
 
 			streamWriter.WriteLine ("Ready!");
-			foreach (string names in usernames) {
-				streamWriter.WriteLine (names);
-			}
+		
 				
 			while (true)
 			{
@@ -117,22 +132,25 @@ public class MultithreadTCPServer
 				string inputLine = streamReader.ReadLine();
 
 				//the first username in the usernames-list is the judge to begin with
-				string judge = usernames [0];
+//				string judge = usernames [0];
 
 				//this prints out all the usernames in the usernames-list when the correct number of players have joined
 				//it does however only print when all players have jointed and one have written a message
 				//dont know why??
-				Console.WriteLine ("The following players are now ready to play: ");
-				foreach (string names in usernames) {
-					Console.WriteLine (names);
-				}
-				//writes the name of the judge in the console
-				Console.WriteLine ("the following player is the judge: " + judge);
+//				Console.WriteLine ("The following players are now ready to play: ");
+//				foreach (string names in usernames) {
+//					Console.WriteLine (names);
+//				}
 
 
 				// If a certain input is recieved from client a hand is dealt 
 				if (inputLine == "p" && enoughPlayers == true) 
 				{
+
+//					assignRoles (players, streamWriter);
+
+
+
 					// Writes the questions found in main to clients
 					streamWriter.WriteLine(questionAsked);
 
@@ -145,6 +163,9 @@ public class MultithreadTCPServer
 					streamWriter.WriteLine(stringToSend);
 				}
 
+				if (inputLine == "1" || inputline == "2" || inputline == "3" || inputline == "4" || inputline == "5") {
+					Console.WriteLine (playerHand[int.Parse(inputline)]);
+				}
 
 
 				Console.WriteLine("Message recieved by client:" + inputLine);
@@ -208,5 +229,35 @@ public class MultithreadTCPServer
 		// The chosen question is returned
 		return _questions [ranVaulue];
 	} // askQuestion
+
+	static void assignRoles(List <Player> playerList, StreamWriter writer)
+	{
+		for (int i = 0; i < playerList.Count; i++) {
+			if (i == 0)
+				playerList [i].isJudge = true;
+			else
+				playerList [i].isJudge = false;
+			writer.WriteLine (playerList [i].isJudge);
+		}
+	} // assignRole
 		
 } // Class
+
+public class Player
+{
+	public string name;
+	public int score;
+	public bool isJudge;
+	public List<string> playerHand = new List<string>();
+
+
+	public Player (string userName)
+	{
+		name = userName;
+		score = 0;
+		isJudge = false;
+	}
+
+
+
+}
