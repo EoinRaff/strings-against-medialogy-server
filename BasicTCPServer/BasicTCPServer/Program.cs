@@ -19,6 +19,7 @@ public class MultithreadTCPServer
 	static public List<Player> players = new List<Player> ();
 	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
 	static public List <string> listOfAnswers = new List<string> ();
+	static public List <string> listOfChosenAnswer = new List<string> ();
 
 	static public string[] standardPlayerRoles = new string[3]{"Judge","Player","Player"}; 
 	static public string[] distributedPlayerRoles = new string[3]; 
@@ -38,8 +39,8 @@ public class MultithreadTCPServer
 	public static void Main()
 	{
 
-		string[] answers = new String[30];
-		string[] questions = new String[4];
+		string[] answers = new String[1000];
+		string[] questions = new String[200];
 
 
 		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
@@ -97,6 +98,7 @@ public class MultithreadTCPServer
 		Socket ClientSocket = tcpListener.AcceptSocket();
 		bool answersRecieved = false;
 		int playerNumber;
+		int playerScore = 0;
 
 		if (ClientSocket.Connected)
 		{
@@ -195,7 +197,7 @@ public class MultithreadTCPServer
 					string tempAnswer = streamReader.ReadLine ();
 					if (tempAnswer != null) {
 						answersRecieved = true;
-						listOfAnswers.Add (tempAnswer);
+						listOfAnswers.Add (tempAnswer + ".");
 					}
 				}
 
@@ -205,39 +207,30 @@ public class MultithreadTCPServer
 						enoughAnswers = true;
 					}
 				}
+
 				Console.WriteLine ("Recieved enough answers!" + playerNumber);
 				streamWriter.WriteLine ("Ready!");
 
-//				if (username = usernames[0]) {
+				listOfAnswers.Remove ("Judge Reply."); // Remove the answer recieved from the judge (Will always be "Judge Reply")
+				string answersSendJudge = string.Join (String.Empty, listOfAnswers.ToArray ()); // Append the two replies
+				streamWriter.WriteLine(answersSendJudge); // Send the two replies to the judge
 
-					listOfAnswers.Remove ("Judge Reply");
-					string answersSendJudge = string.Join (String.Empty, listOfAnswers.ToArray ());
-					streamWriter.WriteLine(answersSendJudge);
-//				}
-
-//				for (int i = 0; i < answerReceived.Count; i++) {
-//					Console.WriteLine (answerReceived [i]);
-//
-//				}
-
-
-
-
-				// Now the only the last player to give an answer as well as the judge gets the ready nodification 
-
-				if (listOfAnswers.Count == numberOfPlayers -1) {
-
-					streamWriter.WriteLine("Ready");
-
-
-//					string stringOfAnswers = string.Join (String.Empty, answerReceived.ToArray ());
-//					streamWriter.WriteLine(stringOfAnswers);
-
+				string winnerAnswer = streamReader.ReadLine (); // Recieve the chosen answer from the judge
+				listOfChosenAnswer.Add(winnerAnswer);
+				for (int i = 0; i < listOfChosenAnswer.Count; i++) {
+					if (listOfChosenAnswer[i] == "waiting on judge")
+						listOfChosenAnswer.RemoveAt(i);
 				}
 
-
-				// Information back and forward between client and server goes here
-
+				Console.WriteLine (winnerAnswer);
+				streamWriter.WriteLine (winnerAnswer); // Write the chosen answer to the players
+			
+//				for (int i = 0; i < playerHand.Count; i++) { // Add score to the winner player
+//					if (winnerAnswer == playerHand[i]) {
+//						playerScore++;
+//					}
+//				}
+//					
 			
 
 				if (inputLine == "exit")
