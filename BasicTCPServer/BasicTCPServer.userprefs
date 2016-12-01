@@ -1,12 +1,8 @@
 ﻿<Properties StartupItem="BasicTCPServer/BasicTCPServer.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="BasicTCPServer/Program.cs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-<<<<<<< HEAD
       <File FileName="BasicTCPServer/Program.cs" Line="1" Column="1" />
-=======
-      <File FileName="BasicTCPServer/Program.cs" Line="96" Column="6" />
->>>>>>> master
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
