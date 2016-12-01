@@ -10,7 +10,7 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "192.168.43.134";
+	public static string serverIP = "192.168.43.116";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
@@ -18,13 +18,15 @@ public class MultithreadTCPServer
 	static public List<string> questionsDeck = new List<string>();
 	static public List<Player> players = new List<Player> ();
 	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
-	static public List <string> answerReceived = new List<string> ();
+	static public List <string> listOfAnswers = new List<string> ();
 
 	static public string[] standardPlayerRoles = new string[3]{"Judge","Player","Player"}; 
 	static public string[] distributedPlayerRoles = new string[3]; 
 
 	static int numberOfPlayers = 0;
+	static int numberOfThreads = 0;
 	static bool enoughPlayers = false;
+	static bool enoughAnswers = false;
 	static string questionAsked;
 
 
@@ -93,9 +95,13 @@ public class MultithreadTCPServer
 	{
 		
 		Socket ClientSocket = tcpListener.AcceptSocket();
+		bool answersRecieved = false;
+		int playerNumber;
+
 		if (ClientSocket.Connected)
 		{
 			numberOfPlayers++;
+			playerNumber = numberOfPlayers;
 			NetworkStream networkStream = new NetworkStream(ClientSocket);
 			StreamWriter streamWriter = new StreamWriter(networkStream, Encoding.ASCII) { AutoFlush = true };
 			StreamReader streamReader = new StreamReader(networkStream, Encoding.ASCII);
@@ -109,7 +115,7 @@ public class MultithreadTCPServer
 			string inputline = streamReader.ReadLine (); // Recieve username from client
 			string username = inputline;
 			players.Add (new Player (username));
-			Console.WriteLine ("Client:" + username + " now connected to server.");
+			Console.WriteLine ("Client:" + username + playerNumber + " now connected to server.");
 			usernames.Add (username);
 
 
@@ -159,9 +165,9 @@ public class MultithreadTCPServer
 					playerHand = dealDeack(answerDeck);
 
 					// Creates one string to send to client instead of list
-					string stringToSend = string.Join (String.Empty, playerHand.ToArray ());
+					string handToSend = string.Join (String.Empty, playerHand.ToArray ());
 
-					streamWriter.WriteLine(stringToSend);
+					streamWriter.WriteLine(handToSend);
 				}
 
 //				if (inputLine == "1" || inputline == "2" || inputline == "3" || inputline == "4" || inputline == "5") {
@@ -169,22 +175,57 @@ public class MultithreadTCPServer
 //				}
 
 
+				// Writes the 
+//				if (inputLine != "p" && inputLine != "P") {
+//					Console.WriteLine("Answer recieved by: " + username + ": " + inputLine);
+//					while (listOfAnswers.Count < numberOfPlayers - 1){
+//						listOfAnswers.Add (inputLine);
+//						Console.WriteLine (inputLine);
+//						Console.WriteLine ("Waiting.. count = {0} number of players -1 = {1}", listOfAnswers.Count, numberOfPlayers -1);
+//
+//						streamWriter.WriteLine ("Waiting..");
+//
+//					}
+//					Console.WriteLine ("Server Ready! all answers submitted");
+//					streamWriter.WriteLine ("Ready!");
+//
+//				}
 
-				if (inputLine != "p" && inputLine != "P") {
-					Console.WriteLine("Answer recieved by client: " + inputLine);
-					answerReceived.Add (inputLine);
-
+				while (!answersRecieved) {
+					string tempAnswer = streamReader.ReadLine ();
+					if (tempAnswer != null) {
+						answersRecieved = true;
+						listOfAnswers.Add (tempAnswer);
+					}
 				}
 
-				for (int i = 0; i < answerReceived.Count; i++) {
-					Console.WriteLine (answerReceived [i]);
-
+				while (!enoughAnswers){
+					streamWriter.WriteLine ("Waiting..");
+					if (listOfAnswers.Count == numberOfPlayers) {
+						enoughAnswers = true;
+					}
 				}
+				Console.WriteLine ("Recieved enough answers!" + playerNumber);
+				streamWriter.WriteLine ("Ready!");
+
+//				if (username = usernames[0]) {
+
+					listOfAnswers.Remove ("Judge Reply");
+					string answersSendJudge = string.Join (String.Empty, listOfAnswers.ToArray ());
+					streamWriter.WriteLine(answersSendJudge);
+//				}
+
+//				for (int i = 0; i < answerReceived.Count; i++) {
+//					Console.WriteLine (answerReceived [i]);
+//
+//				}
+
+
 
 
 				// Now the only the last player to give an answer as well as the judge gets the ready nodification 
 
-				if (answerReceived.Count == numberOfPlayers -1) {
+				if (listOfAnswers.Count == numberOfPlayers -1) {
 
 					streamWriter.WriteLine("Ready");
 
@@ -254,7 +295,7 @@ public class MultithreadTCPServer
 		return _questions [ranVaulue];
 	} // askQuestion
 		
-} // Class
+} // Main class
 
 public class Player
 {
