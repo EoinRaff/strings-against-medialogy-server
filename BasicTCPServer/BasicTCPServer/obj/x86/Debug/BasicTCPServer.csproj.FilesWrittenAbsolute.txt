@@ -25,3 +25,8 @@
 /Users/ThomasLund/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.pdb
 /Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.pdb
 /Users/SuneKlem/Desktop/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.pdb
+/Users/adam/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/adam/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe.mdb
+/Users/adam/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/bin/Debug/BasicTCPServer.exe
+/Users/adam/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe
+/Users/adam/strings-against-medialogy-server/BasicTCPServer/BasicTCPServer/obj/x86/Debug/BasicTCPServer.exe.mdb

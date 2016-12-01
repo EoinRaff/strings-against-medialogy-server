@@ -10,7 +10,7 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "192.168.43.116";
+	public static string serverIP = "192.168.43.170";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
@@ -29,6 +29,7 @@ public class MultithreadTCPServer
 	static bool enoughPlayers = false;
 	static bool enoughAnswers = false;
 	static string questionAsked;
+	static string winner = "";
 
 
 
@@ -218,12 +219,21 @@ public class MultithreadTCPServer
 				string winnerAnswer = streamReader.ReadLine (); // Recieve the chosen answer from the judge
 				listOfChosenAnswer.Add(winnerAnswer);
 				for (int i = 0; i < listOfChosenAnswer.Count; i++) {
-					if (listOfChosenAnswer[i] == "waiting on judge")
-						listOfChosenAnswer.RemoveAt(i);
+					if (listOfChosenAnswer [i] == "waiting") {
+						Console.WriteLine (listOfChosenAnswer [i]);
+						// streamWriter.WriteLine (listOfChosenAnswer[i]);
+						// Console.WriteLine ("The winner is " + listOfChosenAnswer [i]);
+						// listOfChosenAnswer.RemoveAt(i);
+					} else {
+						streamWriter.WriteLine ("Ready!");
+						winner = listOfChosenAnswer[i];
+						Console.WriteLine (winner + " won the round");
+					}
 				}
+				streamWriter.WriteLine (winner + " won the round, Congratulations!, well done mate!, good job, nice!");
 
-				Console.WriteLine (winnerAnswer);
-				streamWriter.WriteLine (winnerAnswer); // Write the chosen answer to the players
+				// Console.WriteLine (winnerAnswer);
+				// streamWriter.WriteLine ("The winner is " + winnerAnswer); // Write the chosen answer to the players
 			
 //				for (int i = 0; i < playerHand.Count; i++) { // Add score to the winner player
 //					if (winnerAnswer == playerHand[i]) {
