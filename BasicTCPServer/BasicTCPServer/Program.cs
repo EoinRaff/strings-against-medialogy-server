@@ -10,14 +10,14 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "192.168.43.105";
+	public static string serverIP = "192.168.43.105"; //should be changed to your IP adress
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
 	static public List<Player> players = new List<Player> ();
-	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
+	static public List<string> listOfUsernames = new List<string> (); //list used to store usernames typed in by the clients
 
 
 	// things that need to be reset after a new game is started 
@@ -34,14 +34,14 @@ public class MultithreadTCPServer
 	static public string[] distributedPlayerRoles = new string[3]; 
 
 	static int numberOfPlayers = 0;
-	static int numberOfThreads = 0;
+	//static int numberOfThreads = 0;
 	static bool enoughPlayers = false;
 	static bool enoughAnswers = false;
 	static bool judgeReady = false;
 	static string questionAsked;
 	static string winner = "";
 
-	static int TimeToSwichtJugde;
+	//static int TimeToSwichtJugde;
 
 
 
@@ -111,7 +111,7 @@ public class MultithreadTCPServer
 		Socket ClientSocket = tcpListener.AcceptSocket();
 		bool answersRecieved = false;
 		int playerNumber;
-		int playerScore = 0;
+		//int playerScore = 0;
 
 		if (ClientSocket.Connected)
 		{
@@ -131,7 +131,7 @@ public class MultithreadTCPServer
 			string username = inputline;
 			players.Add (new Player (username));
 			Console.WriteLine ("Client:" + username + playerNumber + " now connected to server.");
-			usernames.Add (username);
+			listOfUsernames.Add (username);
 
 
 
@@ -197,7 +197,7 @@ public class MultithreadTCPServer
 		
 //  ------------------------Here there should be a something that make the judge role swicht when the players comes to this point-------------------------
 
-					streamWriter.WriteLine (usernames [0]);
+					streamWriter.WriteLine (listOfUsernames [0]);
 
 //  ------------------------Here there should be a something that make a new question being send when the players comes to this point -------------------------
 
