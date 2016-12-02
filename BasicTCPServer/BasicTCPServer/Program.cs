@@ -10,15 +10,14 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "192.168.43.134";
+	public static string serverIP = "192.168.43.105"; //should be changed to your IP adress
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
 	static public List<string> playerHand = new List<string>();
 	static public List<string> questionsDeck = new List<string>();
 	static public List<Player> players = new List<Player> ();
-	static public List<string> usernames = new List<string> (); //list used to store usernames typed in by the clients
-
+	static public List<string> listOfUsernames = new List<string> (); //list used to store usernames typed in by the clients
 
 	// things that need to be reset after a new game is started 
 
@@ -26,43 +25,26 @@ public class MultithreadTCPServer
 	static public List <string> listOfChosenAnswer = new List<string> ();
 	static public List <string> responsFromJudge = new List<string> ();
 
-	static int numOfPlayerThatWantToRestart;
-
-	//
-
 	static public string[] standardPlayerRoles = new string[3]{"Judge","Player","Player"}; 
 	static public string[] distributedPlayerRoles = new string[3]; 
 
 	static int numberOfPlayers = 0;
-	static int numberOfThreads = 0;
+	//static int numberOfThreads = 0;
 	static bool enoughPlayers = false;
 	static bool enoughAnswers = false;
 	static bool judgeReady = false;
 	static string questionAsked;
 	static string winner = "";
 
-	static int TimeToSwichtJugde;
-
-
-
-
-
-	//vælg hvem der er judge 
-	//send til hver player om de judge eller spiller
-	//
+	//static int TimeToSwichtJugde;
 
 	public static void Main()
 	{
-
 		string[] answers = new String[1000];
 		string[] questions = new String[200];
 
-
-		// The file directory should be change, when on a new computer!!!!!!!!!!!!!!!!!!!
-
-		StreamReader awnFile = new StreamReader("answers.txt");
+		StreamReader answerFile = new StreamReader("answers.txt");
 		StreamReader questFile = new StreamReader("questions.txt");
-
 
 		for (int i = 0; i < questions.Length; i++)
 		{
@@ -70,18 +52,15 @@ public class MultithreadTCPServer
 			questions[i] = questFile.ReadLine();
 			questionsDeck.Add(questions[i]);
 		}
-
-
-
+			
 		for (int i = 0; i < answers.Length; i++)
 		{
 			// Takes the awnsers from the file (in the data folder) and load it into a array. That array is then loaded into a list.
-			answers[i] = awnFile.ReadLine();
+			answers[i] = answerFile.ReadLine();
 			answerDeck.Add(answers[i]);
 		}
-
-
-		awnFile.Close();
+			
+		answerFile.Close();
 		questFile.Close();
 
 		tcpListener.Start();
@@ -96,8 +75,6 @@ public class MultithreadTCPServer
 
 		for (int i = 0; i <= 2; i++) {
 			distributedPlayerRoles [i] = standardPlayerRoles [i];
-	
-//			streamWriter.WriteLine (playerrole);
 		}
 			
 		questionAsked = askQuestion(questionsDeck);
@@ -111,7 +88,6 @@ public class MultithreadTCPServer
 		Socket ClientSocket = tcpListener.AcceptSocket();
 		bool answersRecieved = false;
 		int playerNumber;
-		int playerScore = 0;
 
 		if (ClientSocket.Connected)
 		{
@@ -123,16 +99,13 @@ public class MultithreadTCPServer
 
 			//the first input line from the client is their username, this is being stored in a string "username",
 			//the username is then added to the list "usernames" 
-			//this is done for all the clients connected to the server, so the list "usernames" is filled up with the usernames of the clients
-
-
+			//this is done for all the clients connected to the server, so the list "listOfUsernames" is filled up with the usernames of the clients
 
 			string inputline = streamReader.ReadLine (); // Recieve username from client
 			string username = inputline;
 			players.Add (new Player (username));
-			Console.WriteLine ("Client:" + username + playerNumber + " now connected to server.");
-			usernames.Add (username);
-
+			Console.WriteLine ("Client: " + username + " now connected to server.");
+			listOfUsernames.Add (username);
 
 
 			while (!enoughPlayers){
@@ -146,66 +119,32 @@ public class MultithreadTCPServer
 			}
 
 			streamWriter.WriteLine ("Ready!");
-
-		
-				
+	
 			while (true)
 			{
 				restartGame ();
 				answersRecieved = false;
-				Console.WriteLine ("At the start ");
 
 				// Waiting for response from client
 				string inputLine = streamReader.ReadLine();
 
-				Console.WriteLine ("Have read the line ");
 
-
-				//the first username in the usernames-list is the judge to begin with
-//				string judge = usernames [0];
-
-				//this prints out all the usernames in the usernames-list when the correct number of players have joined
-				//it does however only print when all players have jointed and one have written a message
-				//dont know why??
-//				Console.WriteLine ("The following players are now ready to play: ");
-//				foreach (string names in usernames) {
-//					Console.WriteLine (names);
-//				}
-
-	
 				// If a certain input is recieved from client a hand is dealt 
 				if (inputLine == "p" && enoughPlayers == true) 
 				{
-
-//					if (streamReader.ReadLine () == "1") {
-//
-//						for (int i = 0; i < 1; i++)
-//						{
-////							// Takes the awnsers from the file (in the data folder) and load it into a array. That array is then loaded into a list.
-////							answers[i] = awnFile.ReadLine();
-////							answerDeck.Add(answers[i]);
-//
-//							Console.WriteLine ("He want another card");
-//
-//						}
-//
-//					} else {
-//						Console.WriteLine ("he does not want another card");
-//
-//					}
-//
-		
+					
 //  ------------------------Here there should be a something that make the judge role swicht when the players comes to this point-------------------------
 
-					streamWriter.WriteLine (usernames [0]);
+					streamWriter.WriteLine (listOfUsernames [0]);
 
 //  ------------------------Here there should be a something that make a new question being send when the players comes to this point -------------------------
 
 					// Writes the questions found in main to clients
+					Console.WriteLine("The question is: " + questionAsked);
 					streamWriter.WriteLine(questionAsked);
 
 					int cardsNedded = int.Parse(streamReader.ReadLine ());
-					Console.WriteLine (cardsNedded);
+					Console.WriteLine ("{0} needs {1} card(s)", username, cardsNedded);
 
 					//Here the playerHand is set equal to the list returned from the method
 					playerHand = dealDeack(answerDeck,cardsNedded);
@@ -216,36 +155,17 @@ public class MultithreadTCPServer
 					streamWriter.WriteLine(handToSend);
 				}
 
-//				if (inputLine == "1" || inputline == "2" || inputline == "3" || inputline == "4" || inputline == "5") {
-//					Console.WriteLine (playerHand[int.Parse(inputline)]);
-//				}
-
-
-				// Writes the 
-//				if (inputLine != "p" && inputLine != "P") {
-//					Console.WriteLine("Answer recieved by: " + username + ": " + inputLine);
-//					while (listOfAnswers.Count < numberOfPlayers - 1){
-//						listOfAnswers.Add (inputLine);
-//						Console.WriteLine (inputLine);
-//						Console.WriteLine ("Waiting.. count = {0} number of players -1 = {1}", listOfAnswers.Count, numberOfPlayers -1);
-//
-//						streamWriter.WriteLine ("Waiting..");
-//
-//					}
-//					Console.WriteLine ("Server Ready! all answers submitted");
-//					streamWriter.WriteLine ("Ready!");
-//
-//				}
-
+				//two while loops, the first waits for input from this thread, the seconds waits until all threads have responded in order to keep them in sync
+				Console.WriteLine ("Waiting for answers from players");
 				while (!answersRecieved) {
 					string tempAnswer = streamReader.ReadLine ();
 					if (tempAnswer != null) {
 						answersRecieved = true;
-						Console.WriteLine ("TempAnswer: " + tempAnswer);
+						Console.WriteLine ("{0} has submitted the answer: {1}",username, tempAnswer);
 						listOfAnswers.Add (tempAnswer + ".");
 					}
 				}
-
+					
 				while (!enoughAnswers){
 					streamWriter.WriteLine ("Waiting..");
 					if (listOfAnswers.Count == numberOfPlayers) {
@@ -262,14 +182,13 @@ public class MultithreadTCPServer
 
 				answersRecieved = false;
 
-			
-				
-
+				//similiar to the two loops above, except this time waiting for a response from the judge
 				while (!answersRecieved) {
 					string tempAnswer = streamReader.ReadLine ();
 					if (tempAnswer != null) {
 						answersRecieved = true;
 						responsFromJudge.Add (tempAnswer + ".");
+						Console.WriteLine ("{0} response: {1}", username, tempAnswer);
 					}
 				}
 
@@ -279,68 +198,18 @@ public class MultithreadTCPServer
 						judgeReady = true;
 					}
 				}
-//////////// get winner from list of answers 
 
-
-					
-				
-					Console.WriteLine ("Recieved enough answers!" + playerNumber);
+					Console.WriteLine ("Judge is now ready!");
 					streamWriter.WriteLine ("Ready!");
-//
-//					for (int i = 0; i < responsFromJudge.Count; i++) {
-//						Console.WriteLine ("Before: " + responsFromJudge [i]);
-//					}
-//
-//					for (int i = 0; i < responsFromJudge.Count; i++) {
-//						if (responsFromJudge [i] == "waiting") {
-//							responsFromJudge.Remove ("waiting");
-//						}
-//					}
-//
-//
-//					for (int i = 0; i < responsFromJudge.Count; i++) {
-//						Console.WriteLine ("After: " + responsFromJudge [i]);
-//					}
 
+				Console.WriteLine("choosing winner");
 				    winner = responsFromJudge [responsFromJudge.Count-1];
 					Console.WriteLine ("The winning response is: " + winner);
 
-
-//				string winnerAnswer = streamReader.ReadLine (); // Recieve the chosen answer from the judge
-//				listOfChosenAnswer.Add(winnerAnswer);
-//				for (int i = 0; i < listOfChosenAnswer.Count; i++) {
-//					if (listOfChosenAnswer [i] == "waiting") {
-//						Console.WriteLine (listOfChosenAnswer [i]);
-//						// streamWriter.WriteLine (listOfChosenAnswer[i]);
-//						// Console.WriteLine ("The winner is " + listOfChosenAnswer [i]);
-//						// listOfChosenAnswer.RemoveAt(i);
-//					} else {
-//						streamWriter.WriteLine ("Ready!");
-//						winner = listOfChosenAnswer[i];
-//						Console.WriteLine (winner + " won the round");
-//					}
-//				}
-				streamWriter.WriteLine (winner + " won the round, Congratulations!, well done mate!, good job, nice!");
+				streamWriter.WriteLine ("the winning card is: {0}", winner);
 
 				Console.WriteLine (streamReader.ReadLine());
-				numOfPlayerThatWantToRestart++; 
-				//Console.WriteLine ("value of num of players that want to continue: " + numOfPlayerThatWantToRestart);
 
-				if (numOfPlayerThatWantToRestart == numberOfPlayers) {
-					Console.WriteLine ("ONE MORE TIME");
-					Console.Clear ();
-				}
-
-
-				// Console.WriteLine (winnerAnswer);
-				// streamWriter.WriteLine ("The winner is " + winnerAnswer); // Write the chosen answer to the players
-			
-//				for (int i = 0; i < playerHand.Count; i++) { // Add score to the winner player
-//					if (winnerAnswer == playerHand[i]) {
-//						playerScore++;
-//					}
-//				}
-//					
 				if (inputLine == "exit")
 					break;
 			}
@@ -353,7 +222,6 @@ public class MultithreadTCPServer
 		ClientSocket.Close();
 		Console.WriteLine("Client(s) disconnected! : Press any key to exit program");
 		Console.ReadKey();
-
 
 	} // Listener
 
@@ -400,26 +268,14 @@ public class MultithreadTCPServer
 
 	static public void restartGame () {
 
-
-
+		//this needs more work, as restart is buggy
 		listOfAnswers = new List<string> ();
 		listOfChosenAnswer = new List<string> ();
 		responsFromJudge = new List<string> ();
 
 		enoughAnswers = false;
 		judgeReady = false;
-
-
-		numOfPlayerThatWantToRestart = 0;
-
-
 	}
-
-
-
-
-
-
 
 } // Main class
 
@@ -430,14 +286,10 @@ public class Player
 	public bool isJudge;
 	public List<string> playerHand = new List<string>();
 
-
 	public Player (string userName)
 	{
 		name = userName;
 		score = 0;
 		isJudge = false;
 	}
-
-
-
 }
