@@ -10,7 +10,7 @@ using System.Linq;
 public class MultithreadTCPServer
 {
 
-	public static string serverIP = "192.168.43.134";
+	public static string serverIP = "192.168.43.105";
 	static TcpListener tcpListener = new TcpListener(IPAddress.Parse(serverIP), 1234);
 
 	static public List<string> answerDeck = new List<string>();
